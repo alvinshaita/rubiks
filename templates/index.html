@@ -33,11 +33,12 @@
 <h1>Rubik's Cube State Checker</h1>
 
 <!-- value="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB" -->
+<!-- value="WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY" -->
 <div class="controls">
     <input
         id="stateInput"
         type="text"
-        value="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB"
+        value="WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY"
         placeholder="Enter 54-character cube state"
     >
     <button onclick="loadState()">Set State</button>
@@ -77,12 +78,13 @@
 <pre id="output"></pre>
 
 <script>
+
 const colorClass = {
-    "U": "color-U",
+    "W": "color-U",
     "R": "color-R",
-    "F": "color-F",
-    "D": "color-D",
-    "L": "color-L",
+    "G": "color-F",
+    "Y": "color-D",
+    "O": "color-L",
     "B": "color-B",
     "_": "color-_"
 };
@@ -188,7 +190,7 @@ function randomState() {
 }
 
 // Initialize cube in solved state
-const defaultState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
+const defaultState = "WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY";
 applyCubeState(defaultState);
 
 </script>

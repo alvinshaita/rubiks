@@ -22,25 +22,28 @@ def index():
 def check_cube_state():
     state = request.json.get("state", "")
 
-    if len(state) != 54:
+    c = Cube(3, state)
+    k_state = c.get_kociemba_facelet_positions()
+
+    if len(k_state) != 54:
         return jsonify({"status": "invalid", "reason": "State must be 54 characters"}), 400
 
-    if is_any_orientation_solved(state):
+    if is_any_orientation_solved(k_state):
         return jsonify({"status": "solved", "solution": ""})
 
-    unknown_positions = [i for i, c in enumerate(state) if c == "_"]
+    unknown_positions = [i for i, c in enumerate(k_state) if c == "_"]
 
-    # FULL STATE → Solve directly
-    if "_" not in state:
+    # FULL STATE - direct solve
+    if "_" not in k_state:
         try:
-            solution = kociemba.solve(state)
+            solution = kociemba.solve(k_state)
             return jsonify({"status": "valid", "solution": solution})
         except Exception as e:
             return jsonify({"status": "invalid", "reason": str(e)})
 
-    # PARTIAL STATE → generate completions
+    # TODO: PARTIAL STATE - generate completions
     COLORS = ["W", "G", "R", "B", "O", "Y"]
-    known_colors = [c for c in state if c != "_"]
+    known_colors = [c for c in k_state if c != "_"]
     count = {c: known_colors.count(c) for c in COLORS}
 
     # Build missing pool
@@ -59,7 +62,7 @@ def check_cube_state():
     max_results = 200
 
     for perm in set(itertools.permutations(missing)):
-        temp = list(state)
+        temp = list(k_state)
 
         for pos, col in zip(unknown_positions, perm):
             temp[pos] = col
@@ -85,14 +88,43 @@ def check_cube_state():
 def random_state():
     c = Cube(3)
     number_of_random_moves = 25
-    # Generate a random scramble
+    # random scramble
     moves = ["U","U'","U2","R","R'","R2","F","F'","F2","D","D'","D2","L","L'","L2","B","B'","B2"]
     scramble = " ".join(random.choice(moves) for _ in range(number_of_random_moves))
     c.rotate(scramble)
 
-    # Get state in kociemba order
-    state = c.get_kociemba_facelet_positions()
+    state = c.get()
     return jsonify({"state": state})
+
+
+@app.route("/apply_move", methods=["POST"])
+def apply_move():
+    data = request.json or {}
+    state = data.get("state", "")
+    move = data.get("move", "")
+
+    if len(state) != 54:
+        return jsonify({"status": "invalid", "reason": "State must be 54 characters"}), 400
+
+    if move not in ["U","U'","U2","D","D'","D2",
+                    "L","L'","L2","R","R'","R2",
+                    "F","F'","F2","B","B'","B2"]:
+        return jsonify({"status": "invalid", "reason": "Invalid move"}), 400
+
+    try:
+        c = Cube(3, state)
+        c.rotate(move)
+
+        new_state = c.get()
+
+        return jsonify({
+            "status": "ok",
+            "new_state": new_state
+        })
+
+    except Exception as e:
+        return jsonify({"status": "error", "reason": str(e)}), 500
+
 
 def is_any_orientation_solved(state: str) -> bool:
     """
@@ -102,11 +134,10 @@ def is_any_orientation_solved(state: str) -> bool:
     if len(state) != 54:
         return False
 
-    # 6 faces in Kociemba face order
     faces = [state[i*9:(i+1)*9] for i in range(6)]
 
     for face in faces:
-        if len(set(face)) != 1:  # face must be all same color
+        if len(set(face)) != 1:  # face must all be the same color
             return False
 
     return True
