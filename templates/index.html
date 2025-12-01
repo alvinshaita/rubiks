@@ -74,6 +74,40 @@
     </div>
 </div>
 
+<h3>Moves</h3>
+<div id="moves" style="margin-bottom:20px;">
+    <!-- U -->
+    <button onclick="sendMove('U')">U</button>
+    <button onclick="sendMove(`U'`)">U'</button>
+    <button onclick="sendMove('U2')">U2</button>
+
+    <!-- R -->
+    <button onclick="sendMove('R')">R</button>
+    <button onclick="sendMove(`R'`)">R'</button>
+    <button onclick="sendMove('R2')">R2</button>
+
+    <!-- F -->
+    <button onclick="sendMove('F')">F</button>
+    <button onclick="sendMove(`F'`)">F'</button>
+    <button onclick="sendMove('F2')">F2</button>
+
+    <!-- D -->
+    <button onclick="sendMove('D')">D</button>
+    <button onclick="sendMove(`D'`)">D'</button>
+    <button onclick="sendMove('D2')">D2</button>
+
+    <!-- L -->
+    <button onclick="sendMove('L')">L</button>
+    <button onclick="sendMove(`L'`)">L'</button>
+    <button onclick="sendMove('L2')">L2</button>
+
+    <!-- B -->
+    <button onclick="sendMove('B')">B</button>
+    <button onclick="sendMove(`B'`)">B'</button>
+    <button onclick="sendMove('B2')">B2</button>
+</div>
+
+
 <h3>Output:</h3>
 <pre id="output"></pre>
 
@@ -172,14 +206,8 @@ function checkCube() {
     });
 }
 
-const moves = ["U","U'","U2","R","R'","R2","F","F'","F2",
-               "D","D'","D2","L","L'","L2","B","B'","B2"];
-
-// Function to generate random valid state
+// random valid state
 function randomState() {
-    // Use the kociemba library on server side to shuffle (or we can just generate scramble moves)
-    // For client-side simplicity, we'll ask server to generate a scramble
-    
     fetch("/random_state")
         .then(res => res.json())
         .then(data => {
@@ -188,6 +216,35 @@ function randomState() {
             applyCubeState(state);
         });
 }
+
+function sendMove(move) {
+    const state = document.getElementById("stateInput").value.trim();
+
+    fetch("/apply_move", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ state, move })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status !== "ok") {
+            alert("Move failed: " + (data.reason || "Unknown error"));
+            return;
+        }
+
+        const newState = data.new_state;
+
+        // update UI
+        document.getElementById("stateInput").value = newState;
+        applyCubeState(newState);
+
+        document.getElementById("output").textContent =
+            "Applied move: " + move + "\n\n" +
+            JSON.stringify(data, null, 2);
+    })
+    .catch(err => alert("Error: " + err));
+}
+
 
 // Initialize cube in solved state
 const defaultState = "WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY";
