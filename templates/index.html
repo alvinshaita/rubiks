@@ -109,6 +109,7 @@
 
 
 <h3>Output:</h3>
+<pre id="solution-output"></pre>
 <pre id="output"></pre>
 
 <script>
@@ -202,7 +203,7 @@ function checkCube() {
     })
     .then(res => res.json())
     .then(out => {
-        document.getElementById("output").textContent = JSON.stringify(out, null, 2);
+        document.getElementById("solution-output").textContent = JSON.stringify(out, null, 2);
     });
 }
 
