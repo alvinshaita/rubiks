@@ -25,6 +25,9 @@ def check_cube_state():
     if len(state) != 54:
         return jsonify({"status": "invalid", "reason": "State must be 54 characters"}), 400
 
+    if is_any_orientation_solved(state):
+        return jsonify({"status": "solved", "solution": ""})
+
     unknown_positions = [i for i, c in enumerate(state) if c == "_"]
 
     # FULL STATE → Solve directly
@@ -91,6 +94,22 @@ def random_state():
     state = c.get_kociemba_facelet_positions()
     return jsonify({"state": state})
 
+def is_any_orientation_solved(state: str) -> bool:
+    """
+    The cube is solved in any orientation if each face has 9 identical stickers.
+    Orientation of the whole cube does not matter.
+    """
+    if len(state) != 54:
+        return False
+
+    # 6 faces in Kociemba face order
+    faces = [state[i*9:(i+1)*9] for i in range(6)]
+
+    for face in faces:
+        if len(set(face)) != 1:  # face must be all same color
+            return False
+
+    return True
 
 if __name__ == "__main__":
     app.run(debug=True)
