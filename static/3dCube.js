@@ -1,5 +1,6 @@
-// const N = 4;
 const N = 3;
+// const N = 4;
+// const N = 6;
 const HALF = (N - 1) / 2;
 let scene, camera, renderer, controls;
 const cubies = [];
@@ -43,7 +44,7 @@ function init3DCube(){
     camera = new THREE.PerspectiveCamera(45,1,0.1,1000);
     camera.position.set(N*1.5, N*1.5, N*2);
     renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(400,400);
+    renderer.setSize(N*120,N*120);
     document.getElementById("cube3d").appendChild(renderer.domElement);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
