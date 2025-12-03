@@ -9,35 +9,64 @@ const colorClass = {
 };
 
 let history = [];
-const tilesPerFace = 9;
+const tilesPerFace = N*N;
 const faceOrder = ["U", "L", "F", "R", "B", "D"];
 const colors = ["W", "O", "G", "R", "B", "Y", "_"];  // order to cycle through
-const defaultState = "WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY";
 
+const defaultState = generateRubiksState(N);
 
 // Generate tiles for each face
 for (let face of faceOrder) {
     const faceDiv = document.getElementById(face);
-    for (let i = 0; i < tilesPerFace; i++) {
-        const tile = document.createElement("div");
-        tile.classList.add("tile");
-        tile.dataset.pos = i;
-        tile.dataset.face = face;
+    for (let i = 0; i < N; i++) {
+        const tileLine = document.createElement("div");
+        tileLine.classList.add("tileLine");
 
-        // click to cycle color
-        tile.addEventListener("click", () => {
-            let current = colors.indexOf(tile.dataset.color || "_");
-            current = (current + 1) % colors.length;
-            tile.dataset.color = colors[current];
-            tile.className = "tile " + colorClass[colors[current]];
-            updateInputFromTiles();
-            // clear history when tiles are manually changed
-            history = []; 
-            updateMoveHistoryDisplay(); 
-        });
+        for (let j = 0; j < N; j++) {
+            const tile = document.createElement("div");
+            // tile.innerText = "kk"
+            tile.classList.add("tile");
 
-        faceDiv.appendChild(tile);
+            // click to cycle color
+            tile.addEventListener("click", () => {
+                let current = colors.indexOf(tile.dataset.color || "_");
+                current = (current + 1) % colors.length;
+                tile.dataset.color = colors[current];
+                tile.className = "tile " + colorClass[colors[current]];
+                updateInputFromTiles();
+                // clear history when tiles are manually changed
+                history = []; 
+                updateMoveHistoryDisplay(); 
+            });
+
+            tileLine.appendChild(tile);
+        }
+
+        faceDiv.appendChild(tileLine);
     }
+}
+
+const faceDivs = document.getElementsByClassName("face-fill");
+for (let faceDiv of faceDivs) {
+    for (let i = 0; i < N; i++) {
+        const tileLine = document.createElement("div");
+        tileLine.classList.add("tileLine");
+        for (let j = 0; j < N; j++) {
+            const tile = document.createElement("div");
+            tile.classList.add("tile-fill");
+            tileLine.appendChild(tile);
+        }
+        faceDiv.appendChild(tileLine);
+    }
+}
+
+
+function generateRubiksState(n) {
+    var result = "";
+    for (let i = 0; i < 6; i++) {
+        result += colors[i].repeat(n * n);
+    }
+    return result;
 }
 
 
@@ -56,8 +85,8 @@ function updateMoveHistoryDisplay() {
 
 // apply cube state string to tiles
 function applyCubeState(state) {
-    if(state.length !== 54) {
-        alert("State must be 54 characters!");
+    if(state.length !== 6*N*N) {
+        alert(`State must be ${6*N*N} characters!`, state.length);
         return;
     }
     let index = 0;
