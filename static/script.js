@@ -150,7 +150,7 @@ function checkCube() {
         alert("Cube state must be 54 characters!");
         return;
     }
-    fetch("./check_state", {
+    fetch("check_state", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({state})
@@ -164,7 +164,7 @@ function checkCube() {
 
 // random valid state
 function randomState() {
-    fetch("./random_state")
+    fetch("random_state")
         .then(res => res.json())
         .then(data => {
             const state = data.state;
@@ -183,7 +183,7 @@ function randomState() {
 function sendMove(move) {
     const state = document.getElementById("stateInput").value.trim();
 
-    fetch("./apply_move", {
+    fetch("apply_move", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ state, move })
@@ -218,7 +218,7 @@ function sendMove(move) {
 function solve() {
     const state = document.getElementById("stateInput").value.trim();
 
-    fetch("./solve", {
+    fetch("solve", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ state })
