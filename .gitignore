@@ -1,3 +1,7 @@
 *.nt
 *.vc
 __pycache__
+.htaccess
+tmp
+stderr.log
+run.py
