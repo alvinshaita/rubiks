@@ -7,7 +7,7 @@ import exe
 app = Flask(__name__)
 
 @app.errorhandler(Exception)
-def handle_error(err):
+def handle_error(error):
     tb = traceback.format_exc()
     try:
         response = {
