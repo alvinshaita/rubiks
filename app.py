@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Flask, render_template, request, jsonify
 
 import exe
@@ -5,9 +7,24 @@ import exe
 app = Flask(__name__)
 
 @app.errorhandler(Exception)
-def handle_controller_error(err):
-    response = jsonify({"error": str(err)})
-    return response, err
+def handle_error(err):
+    tb = traceback.format_exc()
+    try:
+        response = {
+            "type": "unhandled_exception",
+            "error": error.name,
+            "status_code": error.code,
+            "description": error.description,
+            "traceback": tb,
+        }
+    except Exception:
+        response = {
+            "type": "unhandled_internal_exception",
+            "error": str(error),
+            "traceback": tb,
+        }
+
+    return jsonify(response), 500
 
 # 6 faces in kociemba order
 FACES = ["U", "R", "F", "D", "L", "B"]
