@@ -2,10 +2,8 @@ import itertools
 import math
 import random
 
-from rubik_solver import utils
-
-# import kociemba
-from magiccube import Cube
+from cube.solver import utils
+from cube import Cube
 
 DEFAULT_STATE = "YYYYYYYYYBBBBBBBBBRRRRRRRRRGGGGGGGGGOOOOOOOOOWWWWWWWWW"
 COMPLETE_COLORS = ["W", "G", "R", "B", "O", "Y"]
@@ -119,8 +117,7 @@ def random_state(number_of_random_moves=25):
         move = random.choice(MOVES)
         c.rotate(move)
 
-    print(c)
-    state = c.get()
+    state = c.state.upper()
     return state
 
 
@@ -137,7 +134,7 @@ def apply_move(state, move):
     try:
         c = Cube(cube_size, state)
         c.rotate(move)
-        new_state = c.get()
+        new_state = c.state.upper()
         return {"status": "ok", "new_state": new_state}
     except Exception as e:
         return {"status": "error", "reason": str(e)}
@@ -164,9 +161,14 @@ def solve(state):
         for move in moves:
             c.rotate(move)
 
-        solved_state = c.get()
+        solved_state = c.state.upper()
 
-        return {"status": "ok", "state": solved_state, "solution": solution}
+        return {
+            "status": "ok",
+            "state": solved_state,
+            "problem_state": state,
+            "solution": solution
+        }
 
     except Exception as e:
         return {"status": "error", "reason": str(e)}
