@@ -1,6 +1,4 @@
 const N = 3;
-// const N = 4;
-// const N = 6;
 const HALF = (N - 1) / 2;
 let scene, camera, renderer, controls;
 const cubies = [];
@@ -166,11 +164,12 @@ function initializeCubieColors(state) {
 }
 
 
-function applyMove(move, newState){
-    rotateFace(move, newState);
+function applyMove(move){
+    rotateFace(move);
 }
 
-function rotateFace(move, newState) {
+
+function rotateFace(move) {
     let face = move[0];
     let angle = -Math.PI / 2;
 
@@ -190,7 +189,7 @@ function rotateFace(move, newState) {
 
     // identify the NxN layer
     const rotatingCubies = cubies.filter(c => 
-        Math.round(c.userData.coords[axisData.axis]) === axisData.coord
+        c.userData.coords[axisData.axis] === axisData.coord
     );
 
     const pivot = new THREE.Object3D();
@@ -217,9 +216,9 @@ function rotateFace(move, newState) {
             rotatingCubies.forEach(c => {
                 scene.attach(c);
 
-                c.position.x = Math.round(c.position.x);
-                c.position.y = Math.round(c.position.y);
-                c.position.z = Math.round(c.position.z);
+                c.position.x = Math.round(c.position.x* 2) / 2;
+                c.position.y = Math.round(c.position.y* 2) / 2;
+                c.position.z = Math.round(c.position.z* 2) / 2;
 
                 c.userData.coords.x = c.position.x;
                 c.userData.coords.y = c.position.y;

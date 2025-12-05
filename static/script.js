@@ -210,7 +210,7 @@ function sendMove(move) {
             JSON.stringify(data, null, 2);
 
 
-        applyMove(move, newState)
+        applyMove(move)
     })
     .catch(err => alert("Error: " + err));
 }
@@ -250,7 +250,7 @@ function solve() {
             updateMoveHistoryDisplay();
 
             await delay(300);
-            applyMove(move, state)
+            applyMove(move)
         }
     })
     .catch(err => alert("Error: " + err));
