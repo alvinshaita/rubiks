@@ -44,10 +44,12 @@ def check_cube_state():
     return jsonify(response)
 
 
-@app.route("/random_state")
+@app.route("/random_state", methods=["POST"])
 def random_state():
+    size = request.json.get("size", "")
+
     number_of_random_moves = 25
-    state = exe.random_state(number_of_random_moves)
+    state = exe.random_state(size, number_of_random_moves)
     return jsonify({"state": state})
 
 

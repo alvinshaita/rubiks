@@ -9,7 +9,7 @@ DEFAULT_STATE = "YYYYYYYYYBBBBBBBBBRRRRRRRRRGGGGGGGGGOOOOOOOOOWWWWWWWWW"
 COMPLETE_COLORS = ["W", "G", "R", "B", "O", "Y"]
 MOVES = ["U","U'","U2","R","R'","R2","F","F'","F2","D","D'","D2","L","L'","L2","B","B'","B2"]
 
-def is_any_orientation_solved(state: str) -> bool:
+def is_any_orientation_solved_3x3(state: str) -> bool:
     """
     The cube is solved in any orientation if each face has 9 identical stickers.
     Orientation of the whole cube does not matter.
@@ -26,7 +26,7 @@ def is_any_orientation_solved(state: str) -> bool:
     return True
 
 
-def get_solution(state):
+def get_solution_3x3(state):
     """
     Get solution from a cube state
     """
@@ -92,7 +92,7 @@ def check_cube_state(state):
         return {"status": "invalid", "reason": "State is not valid"}
     cube_size = int(cube_size)
 
-    if is_any_orientation_solved(state):
+    if is_any_orientation_solved_3x3(state):
         return {"status": "solved", "solution": ""}
 
     # FULL STATE - direct solve
@@ -109,8 +109,8 @@ def check_cube_state(state):
     return valid_completions
 
 
-def random_state(number_of_random_moves=25):
-    c = Cube(3, DEFAULT_STATE)
+def random_state(size, number_of_random_moves=25):
+    c = Cube(size)
 
     # random scramble
     for _ in range(number_of_random_moves):
@@ -150,28 +150,32 @@ def solve(state):
     if "_" in state:
         return {"status": "invalid", "reason": "All colors should be filled"}
 
-    if is_any_orientation_solved(state):
-        return {"status": "ok", "solution": "", "state": state}
-    
-    try:
-        solution = get_solution(state)
+    if cube_size == 3:
+        if is_any_orientation_solved_3x3(state):
+            return {"status": "ok", "solution": "", "state": state}
+        
+        try:
+            solution = get_solution_3x3(state)
 
-        c = Cube(3, state)
-        moves = solution.split(" ")
-        for move in moves:
-            c.rotate(move)
+            c = Cube(3, state)
+            moves = solution.split(" ")
+            for move in moves:
+                c.rotate(move)
 
-        solved_state = c.state.upper()
+            solved_state = c.state.upper()
 
-        return {
-            "status": "ok",
-            "state": solved_state,
-            "problem_state": state,
-            "solution": solution
-        }
+            return {
+                "status": "ok",
+                "solved_state": solved_state,
+                "problem_state": state,
+                "solution": solution
+            }
 
-    except Exception as e:
-        return {"status": "error", "reason": str(e)}
+        except Exception as e:
+            return {"status": "error", "reason": str(e)}
+
+    else:
+        return {"status": "todo", "reason": "Can only solve 3x3 cubes"}
 
 
 def get_cube_size(state):
