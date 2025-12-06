@@ -59,9 +59,6 @@ def apply_move():
     state = data.get("state", "")
     move = data.get("move", "")
 
-    if len(state) != 54:
-        return jsonify({"status": "invalid", "reason": "State must be 54 characters"}), 400
-
     response = exe.apply_move(state, move)
     return jsonify(response)
 

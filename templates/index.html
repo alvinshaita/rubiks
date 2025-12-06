@@ -34,6 +34,8 @@
 
         #moves { display: flex; gap: 5px; flex-direction: column; max-width: fit-content;}
         .move-buttons { margin-top: 10px; gap: 5px; width: 30px;}
+        .state-history-item { cursor: pointer; }
+        .state-history-item:hover { color: red; }
     </style>
     <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script> -->
@@ -59,7 +61,7 @@
         type="text"
         placeholder="Enter 54-character cube state"
     >
-    <button onclick="loadState()">Set State</button>
+    <button onclick="loadState()">Load State</button>
     <button onclick="checkCube()">Check Cube</button>
     <button onclick="resetCube()">Reset</button>
     <button onclick="randomState()">Random State</button>
@@ -137,6 +139,8 @@
 <h3>Output:</h3>
 <pre id="solution-output"></pre>
 <pre id="output"></pre>
+<h3>State History:</h3>
+<pre id="state-history"></pre>
 <script src="{{ url_for('static', filename='3dCube.js') }}"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 

@@ -96,72 +96,72 @@ function animate3D(){
 }
 
 
-// function initializeCubieColors(state) {
-//     if (state.length !== 6 * N * N) return;
+function initializeCubieColors(state) {
+    if (state.length !== 6 * N * N) return;
 
-//     cubies.forEach(cube => {
-//         const { x, y, z } = cube.userData.coords;
+    cubies.forEach(cube => {
+        const { x, y, z } = cube.userData.coords;
 
-//         // reset all materials
-//         for (let i = 0; i < 6; i++)
-//             cube.material[i].color.set(0x111111);
+        // reset all materials
+        for (let i = 0; i < 6; i++)
+            cube.material[i].color.set(0x111111);
 
-//         // face mappings
-//         // FRONT (+Z) - material[4]
-//         if (z === HALF) {
-//             let row = HALF - y;
-//             let col = x + HALF;
-//             cube.material[4].color.set(
-//                 colorMap[state[getFaceletIndex("F", row, col)]]
-//             );
-//         }
+        // face mappings
+        // FRONT (+Z) - material[4]
+        if (z === HALF) {
+            let row = HALF - y;
+            let col = x + HALF;
+            cube.material[4].color.set(
+                colorMap[state[getFaceletIndex("F", row, col)]]
+            );
+        }
 
-//         // BACK (-Z) - material[5]
-//         if (z === -HALF) {
-//             let row = HALF - y;
-//             let col = HALF - x;
-//             cube.material[5].color.set(
-//                 colorMap[state[getFaceletIndex("B", row, col)]]
-//             );
-//         }
+        // BACK (-Z) - material[5]
+        if (z === -HALF) {
+            let row = HALF - y;
+            let col = HALF - x;
+            cube.material[5].color.set(
+                colorMap[state[getFaceletIndex("B", row, col)]]
+            );
+        }
 
-//         // RIGHT (+X) - material[0]
-//         if (x === HALF) {
-//             let row = HALF - y;
-//             let col = HALF - z;
-//             cube.material[0].color.set(
-//                 colorMap[state[getFaceletIndex("R", row, col)]]
-//             );
-//         }
+        // RIGHT (+X) - material[0]
+        if (x === HALF) {
+            let row = HALF - y;
+            let col = HALF - z;
+            cube.material[0].color.set(
+                colorMap[state[getFaceletIndex("R", row, col)]]
+            );
+        }
 
-//         // LEFT (-X) - material[1]
-//         if (x === -HALF) {
-//             let row = HALF - y;
-//             let col = z + HALF;
-//             cube.material[1].color.set(
-//                 colorMap[state[getFaceletIndex("L", row, col)]]
-//             );
-//         }
+        // LEFT (-X) - material[1]
+        if (x === -HALF) {
+            let row = HALF - y;
+            let col = z + HALF;
+            cube.material[1].color.set(
+                colorMap[state[getFaceletIndex("L", row, col)]]
+            );
+        }
 
-//         // UP (+Y) - material[2]
-//         if (y === HALF) {
-//             let row = z + HALF;
-//             let col = x + HALF;
-//             cube.material[2].color.set(
-//                 colorMap[state[getFaceletIndex("U", row, col)]]
-//             );
-//         }
+        // UP (+Y) - material[2]
+        if (y === HALF) {
+            let row = z + HALF;
+            let col = x + HALF;
+            cube.material[2].color.set(
+                colorMap[state[getFaceletIndex("U", row, col)]]
+            );
+        }
 
-//         // DOWN (-Y) - material[3]
-//         if (y === -HALF) {
-//             let row = HALF - z;
-//             let col = x + HALF;
-//             cube.material[3].color.set(
-//                 colorMap[state[getFaceletIndex("D", row, col)]]
-//             );
-//         }
-//     });
-// }
+        // DOWN (-Y) - material[3]
+        if (y === -HALF) {
+            let row = HALF - z;
+            let col = x + HALF;
+            cube.material[3].color.set(
+                colorMap[state[getFaceletIndex("D", row, col)]]
+            );
+        }
+    });
+}
 
 function initializeAllCubieColors(state) {
     if (state.length !== 6 * N * N) return;
@@ -221,7 +221,6 @@ function initializeAllCubieColors(state) {
 
         // DOWN (-Y) - material[3]
         if (y <= -HALF + 1 && (y <= x && x <= -y) && (y <= z && z <= -y)) {
-            console.log(x,y,z)
             let row = HALF - z;
             let col = x + HALF;
             cube.material[3].color.set(

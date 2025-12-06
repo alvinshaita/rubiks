@@ -17,6 +17,8 @@ const stateColors = ["Y", "B", "R", "G", "O", "W"]
 const defaultState = generateRubiksState(N);
 document.getElementById("stateInput").value = defaultState;
 
+const stateHistoryView = document.getElementById("state-history")
+
 // Generate tiles for each face
 for (let face of faceOrder) {
     const faceDiv = document.getElementById(face);
@@ -115,7 +117,8 @@ function updateInputFromTiles() {
     }
 
     reset3DCube();
-    initializeCubieColors(state);
+    // initializeCubieColors(state);
+    initializeAllCubieColors(state);
 
     document.getElementById("stateInput").value = state;
 }
@@ -126,7 +129,8 @@ function loadState() {
     applyCubeState(state);
 
     reset3DCube()
-    initializeCubieColors(state);
+    // initializeCubieColors(state);
+    initializeAllCubieColors(state);
 
     // clear history when a new state is loaded from the input box
     resetHistory()
@@ -138,7 +142,8 @@ function resetCube() {
     document.getElementById("stateInput").value = defaultState;
 
     reset3DCube()
-    initializeCubieColors(defaultState);
+    // initializeCubieColors(defaultState);
+    initializeAllCubieColors(defaultState);
 
     // clear history on reset
     resetHistory()
@@ -177,10 +182,25 @@ function randomState() {
             applyCubeState(state);
 
             reset3DCube()
-            initializeCubieColors(state);
+            // initializeCubieColors(state);
+            initializeAllCubieColors(state);
 
             // clear history when a random state is generated
             resetHistory()
+
+            const stateHistoryItem = document.createElement("div");
+            stateHistoryItem.classList.add("state-history-item");
+            stateHistoryItem.textContent = state
+            stateHistoryItem.addEventListener("click", () => {
+                applyCubeState(state)
+
+                reset3DCube()
+                // initializeCubieColors(state);
+                initializeAllCubieColors(state);
+                
+                document.getElementById("stateInput").value = state;
+            });
+            stateHistoryView.appendChild(stateHistoryItem);
         });
 }
 
@@ -229,19 +249,18 @@ function solve() {
     })
     .then(res => res.json())
     .then(async data => {
-        console.log(data)
         if (data.status !== "ok") {
             alert("Solve failed: " + (data.reason || "Unknown error"));
             return;
         }
 
         // solved state
-        const state = data.solved_state;
+        const solved_state = data.solved_state;
         const solution = data.solution;
 
         // update UI
-        document.getElementById("stateInput").value = state;
-        applyCubeState(state);
+        document.getElementById("stateInput").value = solved_state;
+        applyCubeState(solved_state);
 
         document.getElementById("output").textContent =
             "Solved state: " + "\n\n" +
